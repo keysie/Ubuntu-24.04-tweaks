@@ -2,7 +2,9 @@
 (aka how to solve `sign_and_send_pubkey: signing failed for ED25519-SK "ssh:" from agent: agent refused operation` when using a resident SSH-key on a Yubikey (usually created using `ssh-keygen -t ed25519-sk -O resident -O verify-required -C "comment`)
 
 ### Root of the problem
-If all else looks good (see below), then as of Feb 2025 the problem is caused by the Gnome Keyring Daemon's ssh integration. For some reason it by default overrides openSSH's ssh-agent with its own functionality, which does not support hardware-tokens with a pin (or some such, didn't dig into the details there). 
+If all else looks good (see below), then as of Feb 2025 the problem is caused by the Gnome Keyring Daemon's ssh integration. For some reason it by default overrides openSSH's ssh-agent with its own functionality, which does not support hardware-tokens with a pin (or some such, didn't dig into the details there).  
+
+There seems to exist an [issue with the gnome-keyring project](https://gitlab.gnome.org/GNOME/gnome-keyring/-/issues/101) over on GitLab, but noone has touched that in years.
 
 ### Solutions
 Can be solved in different ways. All of this is assuming you already ran `ssh-keygen -K`, such that there exists a file (usually named `id_ed25519_sk_rk` in your ~/.ssh/ folder.
