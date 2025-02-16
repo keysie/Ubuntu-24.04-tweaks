@@ -18,8 +18,11 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
    A more convenient solution, which doesn't affect the system in a permanent way, is to set/overwrite the SSH_AUTH_SOCK environment variable by using the output of `ssh-agent -s`. This is most easily done by running:  
    ```eval $(ssh-agent -s)```   
    This will tell ssh to use the openSSH ssh-agent for the rest of the current shell session. You'll maybe need to run `ssh-add -K` again to add the identity to the correct agent. Simply use ssh-add and ssh-keygen from this point forward (during this shell session), and it will always be the correct one. To debug this, one can simply `echo $SSH_AUTH_SOCK`. If the output look smth like `/run/user/xxxx/keyring/ssh`, then the GNOME keyring is still being used. If it looks like `/tmp/ssh-xxxxxxxx/agent.xxx`, then the openSSH agent is actively being used.
-  
-5. edit/create `~/.ssh/config` (for user-based config) or `/etc/ssh/ssh_config` (for machine wide config) and specify the `IdentityAgent=xxx` in there  (yet untested)  
+
+  Read [this write-up](https://unix.stackexchange.com/a/338200) to get some understanding of which service sets and overwrites SSH_AUTH_SOCK in the process of system start-up and user log-in
+
+- #### Permanent solutions:
+  edit/create `~/.ssh/config` (for user-based config) or `/etc/ssh/ssh_config` (for machine wide config) and specify the `IdentityAgent=xxx` in there  (yet untested)  
    [source](https://man.openbsd.org/ssh_config.5)
 
 #### NOTE:
