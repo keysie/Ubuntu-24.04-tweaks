@@ -26,7 +26,7 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
   ```
   function setup_ssh_agent {
 	if
-		#echo "List of running SSH agents:"
+		echo "List of running SSH agents:"
 		pgrep --list-full --uid $USER --exact ssh-agent
 	then
 		local oldnullglob="$(shopt -p nullglob)"
@@ -37,29 +37,30 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
 		local txt
 		for sock in "${try_socks[@]}"
 		do
-			#echo -n "Trying $sock ... "
+			echo -n "Trying $sock ... "
 			export SSH_AUTH_SOCK=$sock
 			if
 				txt=$(ssh-add -l) ||
 				[[ "$txt" == "The agent has no identities." ]]
 			then
-				#echo "OK"
+				echo "OK"
 				return
 			else
-				#echo
+				echo
 			fi
 		done
 
-		#echo "A working SSH Agent socket could not be found"
+		echo "A working SSH Agent socket could not be found"
 		return 1
 	else
-		#echo -n "None found. Starting one... "
+		echo -n "None found. Starting one... "
 		. <(ssh-agent)
 	fi
   }
-  ```
 
-  Don't forget to call the function with `setup_ssh_agent > /dev/null` after defining it in .bashrc.
+  setup_ssh_agent
+  clear
+  ```
 
 #### NOTE:
 running `gnome-session-properties` and disabling gnome-keyring's ssh integration DOES turn that service off and keep it from interfering, however it DOES NOT fix the issue all by itself. If done this way, one must still find some way to tell ssh which ssh-agent to use (or reference the pseudo private key every single time). 
