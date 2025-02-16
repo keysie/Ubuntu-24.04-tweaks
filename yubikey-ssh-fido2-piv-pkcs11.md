@@ -31,7 +31,7 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
 	then
 		local oldnullglob="$(shopt -p nullglob)"
 		shopt -s nullglob
-		local -a try_socks=($SSH_AUTH_SOCK /tmp/ssh-*/agent.*)
+		local -a try_socks=(/tmp/ssh-*/agent.*)
 		$oldnullglob
 
 		local txt
