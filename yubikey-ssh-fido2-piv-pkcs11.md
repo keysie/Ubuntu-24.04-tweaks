@@ -65,6 +65,9 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
   ```
   This change makes it such that the same ssh-agent is used for all user terminals. This also means that in between reboots ssh-agent will remember added credentials. Reboot will cause ssh-agent to be re-initiated and thus it will forget any cached credentials. This can be solved with a small udev-rule (see below).
 
+- #### BONUS: Add change to default user
+  As sysadmin you'll probably not want to do this for every user manually. To make life easier, add the above changes to `/etc/skel/.bashrc`, such that new users automatically get it as part of their .bashrc.
+
 
 #### NOTE:
 running `gnome-session-properties` and disabling gnome-keyring's ssh integration DOES turn that service off and keep it from interfering, however it DOES NOT fix the issue all by itself. If done this way, one must still find some way to tell ssh which ssh-agent to use (or reference the pseudo private key every single time). 
