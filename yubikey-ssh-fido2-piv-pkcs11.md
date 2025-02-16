@@ -65,12 +65,6 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
   ```
   This change makes it such that the same ssh-agent is used for all user terminals. This also means that in between reboots ssh-agent will remember added credentials. Reboot will cause ssh-agent to be re-initiated and thus it will forget any cached credentials. This can be solved with a small udev-rule (see below).
 
-- #### BONUS: Automatically add resident keys to ssh-agent on plug-in
-  It would sure be convenient not having to run `ssh-add -K` after every reboot. Thankfully there are udev-rules. (Inspired by [this thread](https://stackoverflow.com/questions/69889385/ubuntu-server-21-10-how-to-run-shell-script-when-plugging-usb-device))
-  1. Run `lsusb`to find device- and vendor IDs
-  2. Add a new file `90-usb.rules` in the `/etc/udev/rules.d/` directory including the following rule:  
-     `ACTION=="add", ATTRS{idVendor}=="****", ATTRS{idProduct}=="****", RUN+="ssh-add -K"`  
-     For Yubikey 4 or 5 the Vendor-ID is 1050 and the device ID is 0407.
 
 #### NOTE:
 running `gnome-session-properties` and disabling gnome-keyring's ssh integration DOES turn that service off and keep it from interfering, however it DOES NOT fix the issue all by itself. If done this way, one must still find some way to tell ssh which ssh-agent to use (or reference the pseudo private key every single time). 
