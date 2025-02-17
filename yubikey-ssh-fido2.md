@@ -68,6 +68,20 @@ Can be solved in different ways. All of this is assuming you already ran `ssh-ke
 - #### BONUS: Add change to default user
   As sysadmin you'll probably not want to do this for every user manually. To make life easier, add the above changes to `/etc/skel/.bashrc`, such that new users automatically get it as part of their .bashrc.
 
+- #### BONUS2: Make ssh-keys stay in ssh-agent between reboots
+  Instead of just adding the identities of the resident keys to ssh-agent temporarily by using `ssh-add -K`, one can do the following (Yubikey needs to be plugged in):
+  ```
+  cd ~/.ssh/
+  ssh-keygen -K
+  ```
+  This creates a public and a pseudo 'private' key file to the .ssh folder. No need to set a passphrase - the pseudo-private-keys are just pointers to the key material on the Yubikey (at least if PIN entry and touch is set to required). These identities can now be added to ssh-agent using `ssh-add ~/.ssh/<identity>`. This process can be further automated by adding that line to `.bashrc` in between `setup_ssh_agent` and `clear` like this:
+  ```
+  ...
+  setup_ssh_agent
+  ssh-add ~/.ssh/id_ed25519_sk_rk_XXXX
+  ssh-add ~/.ssh/id_ed25519_sk_rk_YYYY
+  clear
+  ```
 
 #### NOTE:
 running `gnome-session-properties` and disabling gnome-keyring's ssh integration DOES turn that service off and keep it from interfering, however it DOES NOT fix the issue all by itself. If done this way, one must still find some way to tell ssh which ssh-agent to use (or reference the pseudo private key every single time). 
