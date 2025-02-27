@@ -67,3 +67,6 @@ In case you want to print the key to paper, maybe do:
 3. use authenticator binary directly from the folder (no need to build), or
 4. make a pseudo install to have a desktop shortcut using `desktop_integration.sh`
 
+## Step 5: Set up Firefox to use your certificate for client authentication
+Ubuntu's snap-version of Firefox is currently unable to interact with PKCS#11 modules and hardware-keys. Yubico states otherwise in [this post](https://support.yubico.com/hc/en-us/articles/14744483466908-Firefox-Snap-with-PIV-Authentication), but unfortunately the proposed solution using `sudo snap connect firefox:raw-usb` does not seem to work for Firefox 135.0.1 Snap for Ubuntu. By far the easiest solution that currently *does* work is to install Firefox ESR (Extended Support Release) using `sudo apt install firefox-esr`. This will give you two Firefox's to use - the snap for everyday tasks, and Firefox ESR for your PIV applications. There are also other guides out there ([like this one](https://askubuntu.com/a/1404401)) for completely replacing the snap with a "normal" apt-version of Firefox.
+## sudo snap connect firefox:raw-usb
