@@ -1,13 +1,18 @@
 # Setting up and using a Yubikey 5 with PIV in Firefox
 
 ## Limitations
-The Yubico implementation of the PIV application on current Yubikey 5 with firmware 5.7.1 follows the [NIST SP 800-73 document "Cryptographic Algorithms and Key Sizes for PIV"](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-78-5.pdf) according to [the Yubico documentation](https://developers.yubico.com/PIV/Introduction/YubiKey_and_PIV.html). Looking at tables 1 and 2 of said document it becomes clear that only the following key types are currently supported for use with PIV (*ed25519 and RSA4096 ARE supported by the Yubikey 5 with firmware 5.7.1 and above, but only for GPG*):
+The Yubico implementation of the PIV application on current Yubikey 5 with firmware 5.7.1 follows the [NIST SP 800-73 document "Cryptographic Algorithms and Key Sizes for PIV"](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-78-5.pdf) according to [the Yubico documentation](https://developers.yubico.com/PIV/Introduction/YubiKey_and_PIV.html). Looking at tables 1 and 2 of said document it becomes clear that only the following key types are currently supported for use with PIV (*ed25519 is supported by the Yubikey 5 with firmware 5.7.1 and above, but only for GPG*):
 - RSA2048 (nearing its end of life in 2030)
 - RSA3072 (probably currently still good)
 - ECDSA on Curve P-256
 - ECDSA on Curve P-384
 
-The internet seems to strongly believe that P-256 and P-384 might have some backdoors or smth, which really only leaves RSA3072 at the moment.
+### Notes:
+- I just got this to work with RSA4096, Yubikey firmware 5.7.1, yubico-piv-tool 2.7.1, Firefox ESR 128.7.0esr (64-bit) on Ubuntu 24.04
+- The internet seems to strongly believe that P-256 and P-384 might have some backdoors or smth, which really only leaves RSA3072 at the moment.
+
+### My Suspicion:
+Maybe the ykcs11 library can actually handle RSA4096 with PIV, but the Windows 11 certificate store using the Yubico minidriver cannot? Needs testing.
 
 ## Step 1: Build and install Yubico's PIV tool and PKCS#11 library (libykcs11.so)
 The `yubico-piv-tool` allows you to put keys and certificates onto the Yubikey from the CLI. It is also the only way AFAIK to get keys and certs onto slots 82-95. `libykcs11.so` is a module that directly interacts with the hardware and can be used by Firefox (or more accurately Firefox ESR, see below) for authentication. The Ubuntu packaged version of `yubico-piv-tool` is pretty outdated at the moment and not recommended for use.
@@ -69,4 +74,5 @@ In case you want to print the key to paper, maybe do:
 
 ## Step 5: Set up Firefox to use your certificate for client authentication
 Ubuntu's snap-version of Firefox is currently unable to interact with PKCS#11 modules and hardware-keys. Yubico states otherwise in [this post](https://support.yubico.com/hc/en-us/articles/14744483466908-Firefox-Snap-with-PIV-Authentication), but unfortunately the proposed solution using `sudo snap connect firefox:raw-usb` does not seem to work for Firefox 135.0.1 Snap for Ubuntu. By far the easiest solution that currently *does* work is to install Firefox ESR (Extended Support Release) using `sudo apt install firefox-esr`. This will give you two Firefox's to use - the snap for everyday tasks, and Firefox ESR for your PIV applications. There are also other guides out there ([like this one](https://askubuntu.com/a/1404401)) for completely replacing the snap with a "normal" apt-version of Firefox.
-## sudo snap connect firefox:raw-usb
+
+In Firefox, go to Settings -> Privacy & Security -> Security -> Certificates -> Security Devices, then add a new PKCS#11 module with `/usr/local/lib/libykcs11.so`, plug in the Yubikey, click "View Certificates" in Firefox, enter the PIN, and see your certificate there.
