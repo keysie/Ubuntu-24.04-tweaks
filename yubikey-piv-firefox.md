@@ -58,6 +58,8 @@ In case you want to print the key to paper, maybe do:
 - `openssl genrsa -aes256 -out keyname.key 3072` instead of step 1 to get an encrypted key
 - `qrencode --8bit --dpi=300 --level=M --output=keyname.png` to get a QR-code; print the resulting image on paper and use a pen or pencil to manually write the passphrase used during key creation next to it.
 
+Considering safety: According to NIST recommendations (no source) AES256 is about as safe as RSA15360 or ECC521 (smth to do with how long brute-forcing would approximately take, given the best currently known algorithms). So as long as your password is 40 random ASCII characters (~256 bits of entropy acc. to [this Wikipedia article](https://en.wikipedia.org/wiki/Password_strength#Random_passwords)) and you use AES256 it should be fine to keep a digital backup of smaller keys (RSA up to 7680 and ECC up to 384 roughly). Breaking the key itself would be easier than breaking the encryption. Keep this in mind when dicking around with trying to get 8kB of data somehow into a QR-code for a paper backup!
+
 ## Step 3: Test interfacing with the Yubikey
 1. Insert your Yubikey
 2. Run `yubico-piv-tool -a status`. It should display the firmware version of your Yubikey as well as its serial number and all the PIV slot information it can find on the device.
