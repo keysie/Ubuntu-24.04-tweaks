@@ -9,6 +9,7 @@ The Yubico implementation of the PIV application on current Yubikey 5 with firmw
 
 ### Notes:
 - I just got this to work with RSA4096, Yubikey firmware 5.7.1, yubico-piv-tool 2.7.1, Firefox ESR 128.7.0esr (64-bit) on Ubuntu 24.04
+- RSA4096 also works on Windows 11 with Firefox and yubico-piv-tool 2.7.0. (didn't work with yubico-piv-tool 2.5.1)
 - The internet seems to strongly believe that P-256 and P-384 might have some backdoors or smth, which really only leaves RSA3072 at the moment.
 
 ### My Suspicion:
