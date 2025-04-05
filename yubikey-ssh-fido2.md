@@ -1,8 +1,11 @@
 # Getting FIDO2 backed SSH to work
 (aka how to solve `sign_and_send_pubkey: signing failed for ED25519-SK "ssh:" from agent: agent refused operation` when using a resident SSH-key on a Yubikey (usually created using `ssh-keygen -t ed25519-sk -O resident -O verify-required -C "comment`)
 
-### Root of the problem
-If all else looks good (see below), then as of Feb 2025 the problem is caused by the Gnome Keyring Daemon's ssh integration. For some reason it by default overrides openSSH's ssh-agent with its own functionality, which does not support hardware-tokens with a pin (or some such, didn't dig into the details there).  
+### Root(s) of the problem
+1. Permissions of ~/.ssh/ and the files therein.
+2. Version of OpenSSH must be 8.3 or above
+3. ```ssh-askpass-gnome``` must be installed, otherwise ssh-agent is unable to query the device PIN. Annoyingly it does not really announce this propperly. All you get is ssh-agent debug output like ```incorrect passphrase supplied to decrypt private key```. This one took me forever to figure out.
+4. If all else looks good (see below), then as of Feb 2025 the problem is caused by the Gnome Keyring Daemon's ssh integration. For some reason it by default overrides openSSH's ssh-agent with its own functionality, which does not support hardware-tokens with a pin (or some such, didn't dig into the details there).
 
 There seems to exist an [issue with the gnome-keyring project](https://gitlab.gnome.org/GNOME/gnome-keyring/-/issues/101) over on GitLab, but noone has touched that in years.
 
