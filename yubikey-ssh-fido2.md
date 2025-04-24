@@ -11,6 +11,7 @@ There seems to exist an [issue with the gnome-keyring project](https://gitlab.gn
 
 ### Solutions
 Can be solved in different ways. All of this is assuming you already ran `ssh-keygen -K`, such that there exists a file (usually named `id_ed25519_sk_rk` in your ~/.ssh/ folder.
+_NOTE:_ On Windows 11 you might need to run `ssh-keygen -K` from an admin shell - on a normal shell you may get `Unable to load resident keys: invalid format` for no clear reason.
 
 - #### Quick & Dirty:   
    For debugging or some one-time session, simply disable any agent integration for the current ssh session by adding the `-o "IdentityAgent=none"` flag and reference the pseudo private key (which only points to the HW-key) directly, e.g.:  
